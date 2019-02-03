@@ -15,18 +15,18 @@ const ft = require('./enum/ft');
  * REDIRECT - code (3xx), location
  * NO_DATA (others) - code
  * 
- * @param {string} urlStr Target URL as a string
+ * @param {string} dst An absolute URL to fetch
  * @return {Promise} The completable result
  */
-function fetch(urlStr) {
+function fetch(dst) {
     return new Promise((resolve, reject) => {
-        let urlObj = url.parse(urlStr);
-        let client = clients[urlObj.protocol];
+        let dstURL = new URL(dst);
+        let client = clients[dstURL.protocol];
         if (!client) {
-            reject(new Error('Could not select a client for: ' + urlObj.protocol));
+            reject(new Error('Could not select a client for: ' + dstURL.protocol));
         }
         // send the request and resolve the result
-        let req = client.get(urlObj.href, res => {
+        let req = client.get(dstURL.href, res => {
             let result = { code: res.statusCode };
             let codeGroup = Math.floor(res.statusCode / 100);
             // OK
@@ -45,7 +45,7 @@ function fetch(urlStr) {
                 resolve(Object.assign(result, { type: ft.NO_DATA }));
             }
         });
-        req.on('error', err => reject(err));
+        req.on('error', err => reject('Failed on the request: ' + err.message));
         req.end();
     });
 }
