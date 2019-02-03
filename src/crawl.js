@@ -9,12 +9,13 @@ function crawl(start, limit = 100) {
     
     return new Promise((resolve, reject) => {
         !function curl(dst) {
-            count += 1;
-            carry += 1;
             let hash = uutil.getHash(dst);
 
             if (hash in pages === false) {
                 pages[hash] = { url: dst };
+                count += 1;
+                carry += 1;
+                
                 fetch(dst)
                     .then(fetched => {
                         pages[hash].code = fetched.code;
