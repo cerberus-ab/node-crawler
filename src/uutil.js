@@ -8,7 +8,7 @@ function getHash(dst) {
 }
 
 function inScope(dst, base) {
-    return (new URL(base).host).indexOf(new URL(dst).host) !== -1;
+    return (new URL(dst).host).indexOf(new URL(base).host) !== -1;
 }
 
 module.exports = { getHash, inScope };
