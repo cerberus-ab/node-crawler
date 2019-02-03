@@ -11,7 +11,7 @@ const ft = require('./enum/ft');
  * Fetches an URL and returns a Promise
  * which provides a result object in depending on the response:
  * 
- * OK - code (2xx), data
+ * OK - code (2xx), content
  * REDIRECT - code (3xx), location
  * NO_DATA (others) - code
  * 
@@ -34,7 +34,7 @@ function fetch(dst) {
                 let body = [];
                 res.setEncoding('utf8');
                 res.on('data', chunk => body.push(chunk));
-                res.on('end', () => resolve(Object.assign(result, { data: body.join(''), type: ft.OK })));
+                res.on('end', () => resolve(Object.assign(result, { content: body.join(''), type: ft.OK })));
             }
             // REDIRECT
             else if (codeGroup === 3 && res.headers.location) {

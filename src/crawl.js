@@ -18,8 +18,9 @@ function crawl(start, limit = 100) {
                 fetch(dst)
                     .then(fetched => {
                         pages[hash].code = fetched.code;
-                        let links = extract(fetched, start);
+                        let links = extract(fetched, dst, start);
                         let remain = limit - count;
+                        
                         if (links.length && remain > 0) {
                             links.slice(0, remain).forEach(ln => curl(ln));
                         }
@@ -29,7 +30,7 @@ function crawl(start, limit = 100) {
                     })
                     .finally(() => {
                         carry -= 1;
-                        if (carry === 0 || count === limit) {
+                        if (carry === 0) {
                             resolve({ pages, count, fin: count < limit });
                         }
                     });

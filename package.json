@@ -15,5 +15,6 @@
   "author": "Antony Belov <cerberus.ab@mail.ru>",
   "license": "MIT",
   "dependencies": {
+    "jsdom": "^13.2.0"
   }
 }
