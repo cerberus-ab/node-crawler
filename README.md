@@ -6,17 +6,69 @@ The project is being developed only as a prototype and a testing tool. For now i
 # Before start
 Make sure you have [node.js](https://nodejs.org/en/download/) v6 or later.  
 After cloning the repository install dependencies using npm:
-```bash
+```
 npm i
 ```
 
 # Using
 Synopsis:
-```bash
+```
 node crawl-cli.js --start="<URL>" [--output="<filename>"] [--limit=<int>]
 ```
 
 Arguments:
-- *start* Required - The starting URL should be absolute and contains a protocol.
-- *output* Optional - Specify the output file for the JSON-result, By default: "result.json".
-- *limit* Optional - The max number of fetching pages, By default: 100.
+- *start*, Required - The starting URL should be absolute and contains a protocol.
+- *output*, Optional - Specify the output file for the JSON-result, By default: "result.json".
+- *limit*, Optional - The max number of fetching pages, By default: 100.
+
+# Example
+For the instance let's crawl an awesome website:
+```
+$ node crawl-cli.js --start="https://agilenihilist.org" --limit=6
+[2019-02-04T17:04:53.100Z] Start crawl "https://agilenihilist.org" with limit 6
+[2019-02-04T17:04:53.103Z] Request (#1) "https://agilenihilist.org"
+[2019-02-04T17:04:53.546Z] Fetched (#1) "https://agilenihilist.org" with code 301
+[2019-02-04T17:04:53.549Z] Request (#2) "https://www.agilenihilist.org/"
+[2019-02-04T17:04:54.121Z] Fetched (#2) "https://www.agilenihilist.org/" with code 200
+[2019-02-04T17:04:54.204Z] Request (#3) "https://www.agilenihilist.org/cards/1"
+[2019-02-04T17:04:55.455Z] Fetched (#3) "https://www.agilenihilist.org/cards/1" with code 200
+[2019-02-04T17:04:55.490Z] Request (#4) "https://www.agilenihilist.org/cards/all?tag=agile_team"
+[2019-02-04T17:04:55.491Z] Request (#5) "https://www.agilenihilist.org/cards/all?tag=processes"
+[2019-02-04T17:04:55.493Z] Request (#6) "https://www.agilenihilist.org/cards/2"
+[2019-02-04T17:04:55.653Z] Fetched (#4) "https://www.agilenihilist.org/cards/all?tag=agile_team" with code 200
+[2019-02-04T17:04:55.670Z] Fetched (#6) "https://www.agilenihilist.org/cards/2" with code 200
+[2019-02-04T17:04:55.688Z] Fetched (#5) "https://www.agilenihilist.org/cards/all?tag=processes" with code 200
+[2019-02-04T17:04:55.700Z] Finish crawl "https://agilenihilist.org" on count 6
+[2019-02-04T17:04:55.700Z] Save the result in "result.json"
+```
+
+And the result.json file contains:
+```json
+{
+  "pages": [
+    { "id": 1, "url": "https://agilenihilist.org", "code": 301 },
+    { "id": 2, "url": "https://www.agilenihilist.org/", "code": 200 },
+    { "id": 3, "url": "https://www.agilenihilist.org/cards/1", "code": 200 },
+    { "id": 4, "url": "https://www.agilenihilist.org/cards/all?tag=agile_team", "code": 200 },
+    { "id": 5, "url": "https://www.agilenihilist.org/cards/all?tag=processes", "code": 200 },
+    { "id": 6, "url": "https://www.agilenihilist.org/cards/2", "code": 200 }
+  ],
+  "links": [
+    { "from": 1, "to": 2 },
+    { "from": 2, "to": 3 },
+    { "from": 3, "to": 4 },
+    { "from": 3, "to": 5 },
+    { "from": 3, "to": 6 },
+    { "from": 3, "to": 2 },
+    { "from": 4, "to": 3 },
+    { "from": 4, "to": 2 },
+    { "from": 5, "to": 3 },
+    { "from": 5, "to": 2 },
+    { "from": 6, "to": 3 },
+    { "from": 6, "to": 3 },
+    { "from": 6, "to": 2 }
+  ],
+  "count": 6,
+  "fin": false
+}
+```
