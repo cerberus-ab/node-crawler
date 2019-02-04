@@ -9,3 +9,13 @@ After cloning the repository install dependencies using npm:
 ```bash
 npm i
 ```
+
+# Using
+Synopsis:
+```bash
+node crawl-cli.js --start="<URL>" [--limit=<number>]
+```
+
+Arguments:
+- *start {URL}* Required, The starting URL should be absolute and contains a protocol.
+- *limit {int}* Optional, The max number of fetching pages, By default: 100.
