@@ -3,31 +3,37 @@ const fetch = require('./fetch');
 const extract = require('./extract');
 
 function crawl(start, limit = 100) {
-    let pages = {};
+    let cache = {};
+    let id = 0;
+    
     let carry = 0;
     let count = 0;
+    
+    let pages = [];
     
     return new Promise((resolve, reject) => {
         !function curl(dst) {
             let hash = uutil.getHash(dst);
 
-            if (hash in pages === false) {
+            if (hash in cache === false) {
                 if (count + 1 > limit) {
                     return;
                 }
-                pages[hash] = { url: dst };
+                cache[hash] = ++id;
+                let page = { id, url: dst };
                 count++;
                 carry++;
                 
                 fetch(dst)
                     .then(fetched => {
-                        pages[hash].code = fetched.code;
+                        page.code = fetched.code;
                         extract(fetched, dst, start).forEach(ln => curl(ln));
                     })
                     .catch(err => {
-                        pages[hash].code = null;
+                        page.code = null;
                     })
                     .finally(() => {
+                        pages.push(page);
                         if (--carry === 0) {
                             resolve({ pages, count, fin: count < limit });
                         }
