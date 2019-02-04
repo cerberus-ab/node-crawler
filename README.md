@@ -17,8 +17,8 @@ node crawl-cli.js --start="<URL>" [--output="<filename>"] [--limit=<int>]
 ```
 
 Arguments:
-- *start*, Required - The starting URL should be absolute and contains a protocol.
-- *output*, Optional - Specify the output file for the JSON-result, By default: "result.json".
+- *start*, Required - The starting URL should be absolute and contain a protocol (http/https).
+- *output*, Optional - Specifies the output file for the JSON-result, By default: "result.json".
 - *limit*, Optional - The max number of fetching pages, By default: 100.
 
 # Example
@@ -42,7 +42,9 @@ $ node crawl-cli.js --start="https://agilenihilist.org" --limit=6
 [2019-02-04T17:04:55.700Z] Save the result in "result.json"
 ```
 
-And the result.json file contains:
+The stdout log contains events about starting and finishing the crawl, sending requests and fetching responses.
+
+And the result.json file looks like:
 ```json
 {
   "pages": [
@@ -72,3 +74,9 @@ And the result.json file contains:
   "fin": false
 }
 ```
+
+As you can see the result consists of:
+- *pages* `{Array<object>}` - The list of all fetched pages: unique id, URL and HTTP Status Code.
+- *links* `{Array<object>}` - The list of all pages' references: from id (source) and to id (destination).
+- *count* `{number}` - Total number of fetched pages during the crawl.
+- *fin* `{boolean}` - The flag is TRUE if the crawl has finished before the limit reached: it means that all pages of the website have been fetched during the crawl.
