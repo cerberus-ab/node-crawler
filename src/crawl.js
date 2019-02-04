@@ -12,26 +12,23 @@ function crawl(start, limit = 100) {
             let hash = uutil.getHash(dst);
 
             if (hash in pages === false) {
+                if (count + 1 > limit) {
+                    return;
+                }
                 pages[hash] = { url: dst };
-                count += 1;
-                carry += 1;
+                count++;
+                carry++;
                 
                 fetch(dst)
                     .then(fetched => {
                         pages[hash].code = fetched.code;
-                        let links = extract(fetched, dst, start);
-                        let remain = limit - count;
-                        
-                        if (links.length && remain > 0) {
-                            links.slice(0, remain).forEach(ln => curl(ln));
-                        }
+                        extract(fetched, dst, start).forEach(ln => curl(ln));
                     })
                     .catch(err => {
                         pages[hash].code = null;
                     })
                     .finally(() => {
-                        carry -= 1;
-                        if (carry === 0) {
+                        if (--carry === 0) {
                             resolve({ pages, count, fin: count < limit });
                         }
                     });
