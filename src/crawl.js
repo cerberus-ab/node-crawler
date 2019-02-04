@@ -1,6 +1,7 @@
 const uutil = require('./uutil');
 const fetch = require('./fetch');
 const extract = require('./extract');
+const { log } = require('./print');
 
 /**
  * Crawls a website from start URL
@@ -10,7 +11,7 @@ const extract = require('./extract');
  * total count of fetched pages and fin flag (limit reached).
  *
  * @param {string} start An absolute URL to start
- * @param {number} limit Optional limit of fetched pages, By default: 100
+ * @param {number} limit Optional limit of fetching pages, By default: 100
  * @return {Promise} The completable result
  */
 function crawl(start, limit = 100) {
@@ -20,6 +21,7 @@ function crawl(start, limit = 100) {
     let count = 0;
     let pages = [];
     let links = [];
+    log('Start crawl "' + start + '" with limit ' + limit);
     
     return new Promise((resolve, reject) => {
         !function curl(src, dst) {
@@ -34,17 +36,21 @@ function crawl(start, limit = 100) {
                 count++;
                 carry++;
                 
+                log('Request (#' + page.id + ') "' + dst + '"');
                 fetch(dst)
                     .then(fetched => {
+                        log('Fetched (#' + page.id + ') "' + dst + '" with code ' + fetched.code);
                         page.code = fetched.code;
                         extract(fetched, dst, start).forEach(ln => curl(dst, ln));
                     })
                     .catch(err => {
+                        log('Fetched (#' + page.id + ') "' + dst + '" with error ' + err.message);
                         page.code = null;
                     })
                     .finally(() => {
                         pages.push(page);
                         if (--carry === 0) {
+                            log('Finish crawl "' + start + '" on count ' + count);
                             resolve({ 
                                 pages: pages.sort((p1, p2) => p1.id - p2.id), 
                                 links, 
@@ -59,7 +65,6 @@ function crawl(start, limit = 100) {
                 let srcHash = uutil.getHash(src);
                 links.push({ from: cache[srcHash], to: cache[dstHash] });
             }
-            
         }(null, start);
     });
 }

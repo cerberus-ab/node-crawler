@@ -13,9 +13,10 @@ npm i
 # Using
 Synopsis:
 ```bash
-node crawl-cli.js --start="<URL>" [--limit=<number>]
+node crawl-cli.js --start="<URL>" [--output="<filename>"] [--limit=<int>]
 ```
 
 Arguments:
-- *start {URL}* Required, The starting URL should be absolute and contains a protocol.
-- *limit {int}* Optional, The max number of fetching pages, By default: 100.
+- *start* Required - The starting URL should be absolute and contains a protocol.
+- *output* Optional - Specify the output file for the JSON-result, By default: "result.json".
+- *limit* Optional - The max number of fetching pages, By default: 100.
