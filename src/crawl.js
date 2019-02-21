@@ -26,11 +26,6 @@ function crawl(start, limit = 100) {
     return new Promise((resolve, reject) => {
         !function curl(src, dst) {
             let dstHash = uutil.getHash(dst);
-            // save the link if is not root
-            if (src !== null) {
-                let srcHash = uutil.getHash(src);
-                links.push({ from: cache[srcHash], to: cache[dstHash] });
-            }
             // create a new page if is not presented yet
             if (dstHash in cache === false) {
                 if (count + 1 > limit) {
@@ -64,6 +59,11 @@ function crawl(start, limit = 100) {
                             });
                         }
                     });
+            }
+            // save the link if is not root
+            if (src !== null) {
+                let srcHash = uutil.getHash(src);
+                links.push({ from: cache[srcHash], to: cache[dstHash] });
             }
         }(null, start);
     });
