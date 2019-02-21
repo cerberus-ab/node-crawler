@@ -23,7 +23,7 @@ function fetch(dst) {
         let dstURL = new URL(dst);
         let client = clients[dstURL.protocol];
         if (!client) {
-            reject(new Error('Could not select a client for: ' + dstURL.protocol));
+            throw new Error('Could not select a client for: ' + dstURL.protocol);
         }
         // send the request and resolve the result
         let req = client.get(dstURL.href, res => {

@@ -4,7 +4,7 @@ const { JSDOM } = require('jsdom');
 const uutil = require('./uutil');
 const ft = require('./enum/ft');
 
-function select(fetched) {
+function extractRaw(fetched) {
     switch (fetched.type) {
         // use JSDOM for parsing the content for links
         case ft.OK:
@@ -26,7 +26,7 @@ function select(fetched) {
 }
 
 function extract(fetched, src, base) {
-    return select(fetched)
+    return extractRaw(fetched)
         .map(href => url.resolve(src, href))
         .filter(dst => uutil.inScope(dst, base));
 }
