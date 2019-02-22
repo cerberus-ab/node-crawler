@@ -15,12 +15,14 @@ describe('URL utils specification', () => {
         });
         
         let cases = [
-            { src: 'http://example.com/', dst: 'http://www.example.com/', cond: true },
-            { src: 'http://example.com/', dst: 'https://admin.example.com/', cond: true },
-            { src: 'https://example.com/', dst: 'http://test.www.example.com/', cond: true },
+            { src: 'http://example.com/', dst: 'https://example.com', cond: true },
+            { src: 'https://example.com/', dst: 'http://www.example.com/', cond: true },
+            { src: 'http://example.com/', dst: 'http://admin.example.com/', cond: true },
+            { src: 'http://example.com/', dst: 'http://test.www.example.com/', cond: true },
             { src: 'http://example.com/', dst: 'http://example2.com/', cond: false },
             { src: 'http://example.com/', dst: 'http://example.org/', cond: false },
-            { src: 'http://www.example.com/', dst: 'http://blog.example.com/', cond: false }
+            { src: 'http://www.example.com/', dst: 'http://blog.example.com/', cond: false },
+            { src: 'http://example.com/', dst: 'http://wwwexample.com', cond: false }
         ];
         cases.forEach((tc, i) => {
             it(`case #${i + 1}: "${tc.dst}" is ${!tc.cond ? 'NOT ' : ''}in scope "${tc.src}"`, () => {
