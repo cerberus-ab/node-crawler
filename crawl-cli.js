@@ -1,4 +1,6 @@
 
+'use strict';
+
 const argv = Object.assign({
     limit: 20,
     output: 'result.json'

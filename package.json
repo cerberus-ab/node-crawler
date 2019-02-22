@@ -4,7 +4,7 @@
   "description": "The simplest crawler on node.js",
   "main": "crawl-cli.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha ./spec/**/*.[sS]pec.js"
   },
   "keywords": [
     "nodejs",
@@ -18,5 +18,8 @@
     "jsdom": "^13.2.0",
     "minimist": "^1.2.0",
     "normalize-url": "^4.1.0"
+  },
+  "devDependencies": {
+    "mocha": "^6.0.1"
   }
 }

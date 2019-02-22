@@ -1,3 +1,5 @@
+'use strict';
+
 const url = require('url');
 const { JSDOM } = require('jsdom');
 
@@ -28,6 +30,7 @@ function extractRaw(fetched) {
 function extract(fetched, src, base) {
     return extractRaw(fetched)
         .map(href => url.resolve(src, href))
+        .filter(dst => /^https?\:\/\//.test(dst))
         .filter(dst => uutil.inScope(dst, base));
 }
 

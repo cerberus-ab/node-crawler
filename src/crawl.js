@@ -1,3 +1,5 @@
+'use strict';
+
 const uutil = require('./uutil');
 const fetch = require('./fetch');
 const extract = require('./extract');
@@ -32,6 +34,7 @@ function crawl(start, limit = 100) {
                     return;
                 }
                 cache[dstHash] = ++id;
+                // init the page object
                 let page = { id, url: dst };
                 count++;
                 carry++;
@@ -49,6 +52,7 @@ function crawl(start, limit = 100) {
                     })
                     .finally(() => {
                         pages.push(page);
+                        // resolve the result on the last response
                         if (--carry === 0) {
                             log('Finish crawl "' + start + '" on count ' + count);
                             resolve({ 
