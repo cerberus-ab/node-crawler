@@ -29,22 +29,22 @@ function fetch(dst) {
         }
         // send the request and resolve the result
         let req = client.get(dstURL.href, res => {
-            let result = { code: res.statusCode };
-            let codeGroup = Math.floor(res.statusCode / 100);
+            let code = res.statusCode;
+            let codeGroup = Math.floor(code / 100);
             // OK
             if (codeGroup === 2) {
                 let body = [];
                 res.setEncoding('utf8');
                 res.on('data', chunk => body.push(chunk));
-                res.on('end', () => resolve(Object.assign(result, { content: body.join(''), type: ft.OK })));
+                res.on('end', () => resolve({ code, content: body.join(''), type: ft.OK }));
             }
             // REDIRECT
             else if (codeGroup === 3 && res.headers.location) {
-                resolve(Object.assign(result, { location: res.headers.location, type: ft.REDIRECT }));
+                resolve({ code, location: res.headers.location, type: ft.REDIRECT });
             }
             // NO_DATA (others)
             else {
-                resolve(Object.assign(result, { type: ft.NO_DATA }));
+                resolve({ code, type: ft.NO_DATA });
             }
         });
         req.on('error', err => reject('Failed on the request: ' + err.message));

@@ -27,20 +27,20 @@ function crawl(start, limit = 100) {
     
     return new Promise((resolve, reject) => {
         !function curl(src, dst) {
-            let dstHash = uutil.getHash(dst);
+            let dstNorm = uutil.normalize(dst);
             // create a new page if is not presented yet
-            if (dstHash in cache === false) {
+            if (dstNorm in cache === false) {
                 if (count + 1 > limit) {
                     return;
                 }
-                cache[dstHash] = ++id;
+                cache[dstNorm] = ++id;
                 // init the page object
-                let page = { id, url: dst };
+                let page = { id, url: dstNorm };
                 count++;
                 carry++;
                 
                 log('Request (#' + page.id + ') "' + dst + '"');
-                fetch(dst)
+                fetch(dstNorm)
                     .then(fetched => {
                         log('Fetched (#' + page.id + ') "' + dst + '" with code ' + fetched.code);
                         page.code = fetched.code;
@@ -66,8 +66,8 @@ function crawl(start, limit = 100) {
             }
             // save the link if is not root
             if (src !== null) {
-                let srcHash = uutil.getHash(src);
-                links.push({ from: cache[srcHash], to: cache[dstHash] });
+                let srcNorm = uutil.normalize(src);
+                links.push({ from: cache[srcNorm], to: cache[dstNorm] });
             }
         }(null, start);
     });
