@@ -40,8 +40,7 @@ describe('URL utils specification', () => {
          */
         let cases = [
             { dst: 'http://example.com/#page/1', dstNorm: 'http://example.com' },
-            { dst: 'http://www.example.com/', dstNorm: 'http://www.example.com' },
-            { dst: 'http://example.com/path/', dstNorm: 'http://example.com/path/' }
+            { dst: 'http://www.example.com/', dstNorm: 'http://www.example.com' }
         ];
         cases.forEach((tc, i) => {
             it(`case #${i + 1}: "${tc.dst}" cast to "${tc.dstNorm}"`, () => {

@@ -11,8 +11,7 @@ function inScope(dst, base) {
 function normalize(dst) {
     return normalizeUrl(dst, {
         stripHash: true,
-        stripWWW: false,
-        removeTrailingSlash: false
+        stripWWW: false
     });
 }
 
