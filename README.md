@@ -48,8 +48,8 @@ And the result.json file looks like:
 ```json
 {
   "pages": [
-    { "id": 1, "url": "https://agilenihilist.org", "code": 301 },
-    { "id": 2, "url": "https://www.agilenihilist.org", "code": 200 },
+    { "id": 1, "url": "https://agilenihilist.org/", "code": 301 },
+    { "id": 2, "url": "https://www.agilenihilist.org/", "code": 200 },
     { "id": 3, "url": "https://www.agilenihilist.org/cards/1", "code": 200 },
     { "id": 4, "url": "https://www.agilenihilist.org/cards/all?tag=agile_team", "code": 200 },
     { "id": 5, "url": "https://www.agilenihilist.org/cards/all?tag=processes", "code": 200 },
