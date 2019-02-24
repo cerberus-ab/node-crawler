@@ -30,7 +30,7 @@ function extractRaw(fetched) {
 function extract(fetched, src, base) {
     return extractRaw(fetched)
         .map(href => url.resolve(src, href))
-        .filter(dst => /^https?\:\/\//.test(dst))
+        .filter(dst => /^https?\:\/\//i.test(dst))
         .filter(dst => uutil.inScope(dst, base));
 }
 

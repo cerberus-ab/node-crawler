@@ -39,15 +39,15 @@ function crawl(start, limit = 100) {
                 count++;
                 carry++;
                 
-                log('Request (#' + page.id + ') "' + dst + '"');
+                log('Request (#' + page.id + ') "' + dstNorm + '"');
                 fetch(dstNorm)
                     .then(fetched => {
-                        log('Fetched (#' + page.id + ') "' + dst + '" with code ' + fetched.code);
+                        log('Fetched (#' + page.id + ') "' + dstNorm + '" with code ' + fetched.code);
                         page.code = fetched.code;
-                        extract(fetched, dst, start).forEach(ln => curl(dst, ln));
+                        extract(fetched, dstNorm, start).forEach(ln => curl(dstNorm, ln));
                     })
                     .catch(err => {
-                        log('Fetched (#' + page.id + ') "' + dst + '" with error ' + err.message);
+                        log('Fetched (#' + page.id + ') "' + dstNorm + '" with error ' + err.message);
                         page.code = null;
                     })
                     .finally(() => {
@@ -57,7 +57,7 @@ function crawl(start, limit = 100) {
                             log('Finish crawl "' + start + '" on count ' + count);
                             resolve({ 
                                 pages: pages.sort((p1, p2) => p1.id - p2.id), 
-                                links, 
+                                links: links.sort((l1, l2) => l1.from - l2.from || l1.to - l2.to), 
                                 count, 
                                 fin: count < limit 
                             });
@@ -67,7 +67,7 @@ function crawl(start, limit = 100) {
             // save the link if is not root
             if (src !== null) {
                 let srcNorm = uutil.normalize(src);
-                links.push({ from: cache[srcNorm], to: cache[dstNorm] });
+                links.push({ from: cache[srcNorm], to: cache[dstNorm], link: dst });
             }
         }(null, start);
     });
