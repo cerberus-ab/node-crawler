@@ -1,6 +1,6 @@
 {
   "name": "node-crawler",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "The simplest crawler on node.js",
   "main": "crawl-cli.js",
   "scripts": {
