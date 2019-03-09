@@ -17,7 +17,7 @@
   "author": "Antony Belov <cerberus.ab@mail.ru>",
   "license": "MIT",
   "dependencies": {
-    "jsdom": "^13.2.0",
+    "cheerio": "^1.0.0-rc.2",
     "minimist": "^1.2.0"
   },
   "devDependencies": {

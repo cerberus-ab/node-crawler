@@ -1,20 +1,18 @@
 'use strict';
 
 const url = require('url');
-const { JSDOM } = require('jsdom');
+const cheerio = require('cheerio');
 
 const uutil = require('./uutil');
 const ft = require('./enum/ft');
 
 function extractRaw(fetched) {
     switch (fetched.type) {
-        // use JSDOM for parsing the content for links
+        // use cheerio for parsing the content for links
         case ft.OK:
-            let document = new JSDOM(fetched.content).window.document;
-            let elements = document.getElementsByTagName('A');
-            return Array.from(elements)
-                .map(el => el.getAttribute('href'))
-                .filter(href => typeof href === 'string')
+            let $ = cheerio.load(fetched.content);
+            return $('a[href]').toArray()
+                .map(el => $(el).attr('href'))
                 .map(href => href.trim())
                 .filter(Boolean);
         // use the location (from headers)
