@@ -3,6 +3,7 @@
 const uutil = require('./uutil');
 const fetch = require('./fetch');
 const extract = require('./extract');
+const Result = require('./class/Result');
 const { log } = require('./print');
 
 /**
@@ -17,57 +18,45 @@ const { log } = require('./print');
  * @return {Promise} The completable result
  */
 function crawl(start, limit = 100) {
-    let cache = {};
-    let id = 0;  
+    let result = new Result(limit);
     let carry = 0;
-    let count = 0;
-    let pages = [];
-    let links = [];
     log('Start crawl "' + start + '" with limit ' + limit);
     
     return new Promise((resolve, reject) => {
         !function curl(src, dst) {
             let dstNorm = uutil.normalize(dst);
-            // create a new page if is not presented yet
-            if (dstNorm in cache === false) {
-                if (count + 1 > limit) {
+            // create a new page if is not passed yet
+            if (!result.isPassed(dstNorm)) {
+                if (result.isLimitReached()) {
                     return;
                 }
-                cache[dstNorm] = ++id;
                 // init the page object
-                let page = { id, url: dstNorm };
-                count++;
-                carry++;
+                let pid = result.initPage(dstNorm);
                 
-                log('Request (#' + page.id + ') "' + dstNorm + '"');
+                carry++;
+                log('Request (#' + pid + ') "' + dstNorm + '"');
                 fetch(dstNorm)
                     .then(fetched => {
-                        log('Fetched (#' + page.id + ') "' + dstNorm + '" with code ' + fetched.code);
-                        page.code = fetched.code;
+                        log('Fetched (#' + pid + ') "' + dstNorm + '" with code ' + fetched.code);
+                        result.finPage(dstNorm, fetched.code);
                         extract(fetched, dstNorm, start).forEach(ln => curl(dstNorm, ln));
                     })
                     .catch(err => {
-                        log('Fetched (#' + page.id + ') "' + dstNorm + '" with error ' + err.message);
-                        page.code = null;
+                        log('Fetched (#' + pid + ') "' + dstNorm + '" with error ' + err.message);
+                        result.finPage(dstNorm, null);
                     })
                     .finally(() => {
-                        pages.push(page);
                         // resolve the result on the last response
                         if (--carry === 0) {
-                            log('Finish crawl "' + start + '" on count ' + count);
-                            resolve({ 
-                                pages: pages.sort((p1, p2) => p1.id - p2.id), 
-                                links: links.sort((l1, l2) => l1.from - l2.from || l1.to - l2.to), 
-                                count, 
-                                fin: count < limit 
-                            });
+                            log('Finish crawl "' + start + '" on count ' + result.count);
+                            resolve(result.toResolve());
                         }
                     });
             }
             // save the link if is not root
             if (src !== null) {
                 let srcNorm = uutil.normalize(src);
-                links.push({ from: cache[srcNorm], to: cache[dstNorm], link: dst });
+                result.addLink(srcNorm, dstNorm);
             }
         }(null, start);
     });
